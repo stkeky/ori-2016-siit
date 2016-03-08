@@ -6,4 +6,4 @@ Ukoliko rešite neki od dodatnih zadataka, napravite Pull Request koji će u seb
 Na početku fajla u komentaru napisati ko je autor i koji zadatak je rešen
 (uz opciono objašnjenje do kog zaključka je autor došao primenom linearne regresije na date podatke)
 * Data set (podatke) - u csv/tsv/txt formatu, a ime da bude isto kao ime Python skripte
-* Oba prethodna fajla staviti u ovaj - folder **bonus**
+* Oba prethodna fajla staviti u ovaj folder - **bonus**
