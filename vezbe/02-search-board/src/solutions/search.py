@@ -2,6 +2,7 @@ from __future__ import print_function
 
 from collections import deque
 from abc import *
+from state import *
 
 
 class Search(object):
@@ -11,6 +12,7 @@ class Search(object):
 
     def __init__(self, board):
         self.board = board
+        self.max_depth = 2
 
     def search(self, initial_state):
         """
@@ -50,6 +52,13 @@ class Search(object):
             states_list.extend(new_states)
             # dodaj sledeca moguca stanja u set stanja
             states_set.update([new_state.unique_hash() for new_state in new_states])
+        
+        # Samo u slucaju IterativeDepthFirstSearch-a pokrecemo opet, ali samo ako je dubina manja od 128.
+        if isinstance(self, IterativeDepthFirstSearch) and self.max_depth < 128:
+            # Uvecamo maksimalnu dubinu za 1 i opet iniciramo pretragu
+            self.max_depth += 1
+            return self.search(RobotState)
+        
         return None, processed_list, states_list
 
     @staticmethod
@@ -89,6 +98,10 @@ class DepthFirstSearch(Search):
 class IterativeDepthFirstSearch(Search):
     def select_state(self, states):
         # TODO 2: Rijesen zadatk implementiranja IDFS-a
+        while len(states) != 0:
+            state = states.pop()
+            if state.depth <= self.max_depth:
+                return state
 
 
 class GreedySearch(Search):

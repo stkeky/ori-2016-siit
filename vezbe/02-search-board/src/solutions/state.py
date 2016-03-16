@@ -123,7 +123,7 @@ class RobotState(State):
             self.picked_boxes = []
 
         # Ako smo trenutno na polju koje je kutija dodamo kutiju
-        if self.position in board._boxes and self.position not in self.picked_boxes:
+        if self.position in board.boxes and self.position not in self.picked_boxes:
             self.picked_boxes.append(self.position)
         
         # Ako je broj kutija jednak broju svih kutija ili roditelj ima sve kutije
