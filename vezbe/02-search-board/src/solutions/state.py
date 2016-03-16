@@ -42,9 +42,11 @@ class State(object):
             next_states.append(next_state)
             
         # Provjeravamo da li je trenutna pozicija portal da bismo dodali i ta stanja...
+        # TODO 7: Implementirano pomijeranje sa portala na portal.
         portal_positions = self.board.find_elements('p')
         if self.position in portal_positions:
             portal_positions.remove(self.position)
+            # Dodajemo samo razilicite portale od onog na kome smo.
             for position in portal_positions:
                 state = self.__class__(self.board, self, position, self.goal_position)
                 next_states.append(state)
