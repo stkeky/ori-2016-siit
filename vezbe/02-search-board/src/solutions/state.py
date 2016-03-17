@@ -41,16 +41,6 @@ class State(object):
             next_state = self.__class__(self.board, self, new_position, self.goal_position)
             next_states.append(next_state)
             
-        # Provjeravamo da li je trenutna pozicija portal da bismo dodali i ta stanja...
-        # TODO 7: Implementirano pomijeranje sa portala na portal.
-        portal_positions = self.board.find_elements('p')
-        if self.position in portal_positions:
-            portal_positions.remove(self.position)
-            # Dodajemo samo razilicite portale od onog na kome smo.
-            for position in portal_positions:
-                state = self.__class__(self.board, self, position, self.goal_position)
-                next_states.append(state)
-            
         return next_states
 
     @abstractmethod
@@ -163,6 +153,15 @@ class RobotState(State):
             # ako nova pozicija nije van table i ako nije zid ('w'), ubaci u listu legalnih pozicija
             if 0 <= new_row < self.board.rows and 0 <= new_col < self.board.cols and self.board.data[new_row][new_col] != 'w':
                 new_positions.append((new_row, new_col))
+                
+        # Provjeravamo da li je trenutna pozicija portal da bismo dodali i ta stanja...
+        # TODO 7: Implementirano pomijeranje sa portala na portal.
+        portal_positions = self.board.find_elements('p')
+        if self.position in portal_positions:
+            portal_positions.remove(self.position)
+            # Dodajemo samo razilicite portale od onog na kome smo.
+            new_positions.extend(portal_positions)
+            
         return new_positions
 
     def is_final_state(self):
