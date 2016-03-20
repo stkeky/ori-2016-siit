@@ -52,7 +52,7 @@ def reset():
 def key(event):
     k = event.keysym.lower()
     row, col, new_row, new_col = board.move_player_keyboard(k)
-    if board.find_position('r') != (None, None):
+    if len(board.find_position('r')) > 0:
         update_board(row, col)
         update_board(new_row, new_col)
 
@@ -177,7 +177,7 @@ def do_search():
     global processed, path
     reset()
     # koju strategiju pretrage koristiti
-    search = BreadthFirstSearch(board)
+    search = AStarSearch(board)
     # kog "agenta" koristiti
     initial_state = RobotState
 
@@ -229,7 +229,10 @@ def move_icon(from_position, to_position, has_box=None):
 def debug():
     global processed
     reset()
-    position = board.find_position('r')
+    if board.find_position('r') > 0:
+        position = board.find_position('r')[0]
+    else:
+        position = None, None
     for idx, p in enumerate(processed):
         move_icon(position, p.position, hasattr(p, 'has_box') and p.has_box)
         position = p.position
@@ -253,7 +256,9 @@ grid_text_ids = [[[]] * cols for _ in range(rows)]
 # mapiranje sadrzaja table na boju celije
 board_to_colors = {'.': 'white',
                    'w': 'gray',
-                   'g': 'orangered'}
+                   'g': 'orangered',
+                   'b': 'blue',
+                   'p': 'yellow'}
 # mapiranje sadrzaja table na ikonicu
 board_to_icons = {'r': 'robot.png'}
 

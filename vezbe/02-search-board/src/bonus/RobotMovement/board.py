@@ -17,11 +17,15 @@ class Board:
         # w = wall
         # r = robot
         # g = robot's goal
+        # b = box
+        # p = portal
         # ----------------
         self.elems = ['.',
                       'w',
                       'r',
-                      'g']
+                      'g',
+                      'b',
+                      'p']
         self.data = [['.'] * cols for _ in range(rows)]
         self.text = [[''] * cols for _ in range(rows)]
 
@@ -76,11 +80,12 @@ class Board:
         :param element: kod elementa.
         :returns: tuple(int, int)
         """
+        positions = []
         for row in range(self.rows):
             for col in range(self.cols):
                 if self.data[row][col] == element:
-                    return row, col
-        return None, None
+                    positions.append((row, col))
+        return positions
 
     def move_player_keyboard(self, direction):
         position = self.find_position('r')

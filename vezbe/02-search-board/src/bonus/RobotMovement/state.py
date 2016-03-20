@@ -5,6 +5,7 @@ from __future__ import print_function
 
 from abc import *
 import math
+import sys
 
 class State(object):
     """
@@ -23,8 +24,10 @@ class State(object):
         self.board = board
         self.parent = parent  # roditeljsko stanje
         if self.parent is None:  # ako nema roditeljsko stanje, onda je ovo inicijalno stanje
-            self.position = board.find_position(self.get_agent_code())  # pronadji pocetnu poziciju
-            self.goal_position = board.find_position(self.get_agent_goal_code())  # pronadji krajnju poziciju
+            if board.find_position(self.get_agent_code()) > 0:
+                self.position = board.find_position(self.get_agent_code())[0]  # pronadji pocetnu poziciju
+            if  board.find_position(self.get_agent_goal_code()) > 0:
+                self.goal_position = board.find_position(self.get_agent_goal_code())[0]  # pronadji krajnju poziciju
         else:  # ako ima roditeljsko stanje, samo sacuvaj vrednosti parametara
             self.position = position
             self.goal_position = goal_position
@@ -105,7 +108,24 @@ class RobotState(State):
         super(self.__class__, self).__init__(board, parent, position, goal_position)
         # posle pozivanja super konstruktora, mogu se dodavati "custom" stvari vezani za stanje
         # TODO 6: prosiriti stanje sa informacijom da li je robot pokupio kutiju
-
+        if self.parent is not None:                                            
+            self.collected_boxes = set(self.parent.collected_boxes)          
+        else:                                                            
+            self.collected_boxes = set()                                        
+        boxes = self.board.find_position('b')
+        for box in boxes:
+            if box == self.position and box not in self.collected_boxes:    
+                self.collected_boxes.add(box)                                 
+                break
+        if len(self.collected_boxes) == len(boxes):                           
+            self.goal_position = self.board.find_position('g')[0]         
+        else:                                                                
+            closest_box = (sys.float_info.max, sys.float_info.max)          
+            for box in boxes:
+                if box not in self.collected_boxes:
+                    if abs(box[0] - self.position[0]) + abs(box[1] - self.position[1]) < abs(closest_box[0] - self.position[0]) + abs(closest_box[1] - self.position[1]):
+                        closest_box = box
+            self.goal_position = closest_box
 
     def get_agent_code(self):
         return 'r'
@@ -238,11 +258,12 @@ class RobotState(State):
             return new_positions
 
     def is_final_state(self):
-        return self.position == self.goal_position
+        return len(self.board.find_position('b')) == len(self.collected_boxes) and self.position == self.goal_position
 
     def unique_hash(self):
-        return str(self.position)
+        arr = str([box for box in self.collected_boxes])
+        return str(self.position) + ':' + arr
         
     def get_cost(self):
         return math.sqrt((self.position[0] - self.goal_position[0])**2 +
-            (self.position[1] - self.goal_position[1])**2)
+            (self.position[1] - self.goal_position[1])**2) + + (self.board.cols + self.board.rows) * (len(self.board.find_position('b')) - len(self.collected_boxes))
