@@ -142,6 +142,11 @@ class RobotState(State):
 
             row, col = self.position  # trenutno pozicija
             new_positions = []
+            portals = self.board.find_position('p')
+            if self.position in portals:                                          
+                for portal in portals:                                           
+                    if portal != self.position:
+                        new_positions.append(portal)
             for d_row, d_col in zip(d_rows, d_cols):  # za sve moguce smerove
                 new_row = row + d_row  # nova pozicija po redu
                 new_col = col + d_col  # nova pozicija po koloni
@@ -155,6 +160,11 @@ class RobotState(State):
 
             row, col = self.position  # trenutno pozicija
             new_positions = []
+            portals = self.board.find_position('p')
+            if self.position in portals:                                          
+                for portal in portals:                                           
+                    if portal != self.position:
+                        new_positions.append(portal)
             for d_row, d_col in zip(d_rows, d_cols):  # za sve moguce smerove
                 new_row = row + d_row  # nova pozicija po redu
                 new_col = col + d_col  # nova pozicija po koloni
@@ -167,6 +177,11 @@ class RobotState(State):
             new_row = row
             new_col = col
             new_positions = []
+            portals = self.board.find_position('p')
+            if self.position in portals:                                          
+                for portal in portals:                                           
+                    if portal != self.position:
+                        new_positions.append(portal)
             for i in range(row+1, self.board.rows):     #redovi od trenutne pozicije do ivice table
                 # ako nova pozicija nije zid ('w'), ubaci u listu legalnih pozicija, ako naidjes na zid, prekini, ne mozes proci kroz zid :D
                 if self.board.data[i][col] != 'w':
@@ -231,6 +246,11 @@ class RobotState(State):
         elif moving == 'ROOK':
             row, col = self.position  # trenutno pozicija
             new_positions = []
+            portals = self.board.find_position('p')
+            if self.position in portals:                                          
+                for portal in portals:                                           
+                    if portal != self.position:
+                        new_positions.append(portal)
             for i in range(row+1, self.board.rows):     #redovi od trenutne pozicije do ivice table
                 # ako nova pozicija nije zid ('w'), ubaci u listu legalnih pozicija, ako naidjes na zid, prekini, ne mozes proci kroz zid :D
                 if self.board.data[i][col] != 'w':
@@ -266,4 +286,4 @@ class RobotState(State):
         
     def get_cost(self):
         return math.sqrt((self.position[0] - self.goal_position[0])**2 +
-            (self.position[1] - self.goal_position[1])**2) + + (self.board.cols + self.board.rows) * (len(self.board.find_position('b')) - len(self.collected_boxes))
+            (self.position[1] - self.goal_position[1])**2) + (self.board.cols + self.board.rows) * (len(self.board.find_position('b')) - len(self.collected_boxes))
